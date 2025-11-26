@@ -108,7 +108,7 @@ import Property from './property.model';
 const createProperty = async (
   userId: string,
   payload: IProperty,
-  file?: Express.Multer.File,
+  files?: Express.Multer.File[],
   supplyerIdCreateIdAgent?: string,
 ) => {
   const user = await User.findById(userId);
@@ -119,9 +119,11 @@ const createProperty = async (
   const propertyType = await PropertyType.findById(payload.type);
   if (!propertyType) throw new AppError(404, 'PropertyType not found');
 
-  if (file) {
-    const propertyImage = await fileUploader.uploadToCloudinary(file);
-    payload.thumble = propertyImage.secure_url;
+  if (files) {
+    const propertyImage = await Promise.all(
+      files.map((file) => fileUploader.uploadToCloudinary(file)),
+    );
+    payload.thumble = propertyImage.map((image) => image.secure_url);
   }
 
   if (user.role === userRole.AGENT) {
@@ -309,11 +311,13 @@ const getAdminAllProperties = async (params: any, options: IOption) => {
 const updateProperty = async (
   id: string,
   payload: Partial<IProperty>,
-  file?: Express.Multer.File,
+  files?: Express.Multer.File[],
 ) => {
-  if (file) {
-    const propertyImage = await fileUploader.uploadToCloudinary(file);
-    payload.thumble = propertyImage.secure_url;
+  if (files) {
+    const propertyImage = await Promise.all(
+      files.map((file) => fileUploader.uploadToCloudinary(file)),
+    );
+    payload.thumble = propertyImage.map((image) => image.secure_url);
   }
   const property = await Property.findByIdAndUpdate(id, payload, { new: true });
   if (!property) {
@@ -334,15 +338,17 @@ const updateMyProperty = async (
   id: string,
   userId: string,
   payload: Partial<IProperty>,
-  file?: Express.Multer.File,
+  files?: Express.Multer.File[],
 ) => {
   const user = await User.findById(userId);
   if (!user) {
     throw new AppError(404, 'User not found');
   }
-  if (file) {
-    const propertyImage = await fileUploader.uploadToCloudinary(file);
-    payload.thumble = propertyImage.secure_url;
+ if (files) {
+    const propertyImage = await Promise.all(
+      files.map((file) => fileUploader.uploadToCloudinary(file)),
+    );
+    payload.thumble = propertyImage.map((image) => image.secure_url);
   }
   const property = await Property.findOneAndUpdate(
     { _id: id, user: userId },
