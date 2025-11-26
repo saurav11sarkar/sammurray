@@ -13,7 +13,7 @@ const porertySchema = new mongoose.Schema<IProperty>(
     price: { type: Number, required: true },
     title: { type: String, required: true },
     description: { type: String },
-    thumble: { type: String },
+    thumble: [{ type: String }],
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     country: { type: String, required: true },
     city: { type: String, required: true },
@@ -24,7 +24,10 @@ const porertySchema = new mongoose.Schema<IProperty>(
       coordinates: { type: [Number], required: true }, // [lng, lat]
     },
     bookingUser: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    supplyerIdCreateIdAgent: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    supplyerIdCreateIdAgent: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
     managedByThisAgency: { type: Boolean, default: false },
   },
   { timestamps: true },
