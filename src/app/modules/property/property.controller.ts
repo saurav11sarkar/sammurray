@@ -68,9 +68,9 @@ import { propertyService } from './property.service';
 
 const createProperty = catchAsync(async (req, res) => {
   const userId = req.user.id;
-  const file = req.file as Express.Multer.File;
+  const files = req.files as Express.Multer.File[];
   const fromData = req.body.data ? JSON.parse(req.body.data) : req.body;
-  const result = await propertyService.createProperty(userId, fromData, file);
+  const result = await propertyService.createProperty(userId, fromData, files);
   sendResponse(res, {
     statusCode: 201,
     success: true,
@@ -178,9 +178,9 @@ const getAdminAllProperties = catchAsync(async (req, res) => {
 
 const updateProperty = catchAsync(async (req, res) => {
   const id = req.params.id!;
-  const file = req.file as Express.Multer.File;
+  const files = req.files as Express.Multer.File[];
   const fromData = req.body.data ? JSON.parse(req.body.data) : req.body;
-  const result = await propertyService.updateProperty(id, fromData, file);
+  const result = await propertyService.updateProperty(id, fromData, files);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -246,14 +246,14 @@ const getMyAllProperties = catchAsync(async (req, res) => {
 });
 const updateMyProperty = catchAsync(async (req, res) => {
   const id = req.params.id!;
-  const file = req.file as Express.Multer.File;
+  const files = req.files as Express.Multer.File[];
   const fromData = req.body.data ? JSON.parse(req.body.data) : req.body;
   const userId = req.user.id;
   const result = await propertyService.updateMyProperty(
     id,
     userId,
     fromData,
-    file,
+    files,
   );
   sendResponse(res, {
     statusCode: 200,

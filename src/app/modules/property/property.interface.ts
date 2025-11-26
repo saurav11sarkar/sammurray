@@ -7,7 +7,7 @@ export interface IProperty {
   price: number;
   title: string;
   description?: string;
-  thumble?: string;
+  thumble?: string[];
   user: Types.ObjectId;
   country?: string;
   city: string;

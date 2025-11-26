@@ -13,7 +13,7 @@ router.get('/nearby', optionalAuth, propertyController.getNearbyProperties);
 router.post(
   '/',
   auth(userRole.ADMIN, userRole.SUPPLIER, userRole.AGENT),
-  fileUploader.upload.single('thumble'),
+  fileUploader.upload.array('thumble'),
   propertyController.createProperty,
 );
 
@@ -26,7 +26,7 @@ router.get(
 router.put(
   '/admin/:id',
   auth(userRole.ADMIN),
-  fileUploader.upload.single('thumble'),
+  fileUploader.upload.array('thumble'),
   propertyController.updateProperty,
 );
 router.delete(
@@ -44,7 +44,7 @@ router.get(
 router.put(
   '/my/:id',
   auth(userRole.SUPPLIER, userRole.ADMIN),
-  fileUploader.upload.single('thumble'),
+  fileUploader.upload.array('thumble'),
   propertyController.updateMyProperty,
 );
 router.delete(
